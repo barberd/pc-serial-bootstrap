@@ -1,6 +1,6 @@
 # pc-serial-bootstrap
 
-Code to bootstrap a PC over serial starting with IBM Cassette BASIC. I used this to write operating systems and communications software floppy images to physical diskette on an IBM PC 5150.
+Code to bootstrap a PC over serial starting with IBM Cassette BASIC. I used this to write operating system and communications software floppy images to physical diskette on an IBM PC 5150 when I had no software to get started but did have a serial connection and blank floppy disks.
 
 ### Use
 
