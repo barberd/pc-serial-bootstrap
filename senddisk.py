@@ -187,7 +187,7 @@ if __name__ == '__main__':  # noqa
             ser.read(1)
         time.sleep(bytedelay)
         print("Writing bytes.")
-        len(buf)<512:
+        if len(buf)<512:
             buf=buf+bytes((512-len(buf))*[0])
             for b in buf:
                 ser.write(b.to_bytes(1,'big'))
