@@ -172,10 +172,11 @@ if __name__ == '__main__':  # noqa
 
 
     #Crazy seek math below for 2 sided disks is because a disk image is actually
-    #interleaved on both sides of the disk. So bytes 0-511 are written on
-    #head 0, track 0...but bytes 512-1023 are written on head 1, track 0.
-    #then head 0, track 1, then head 1, track 1, and so on.
-    #Interestingly enough this practice seems to be documented almost nowhere.
+    #interleaved on both sides of the disk. So bytes 0..SECTRK*SECLEN-1 are 
+    #written on head 0, track 0...but the next set of sectors is written on 
+    #head 1, track 0. Then head 0, track 1, followed by head 1, track 1, and 
+    #so on.
+    #This practice seems to be documented almost nowhere.
 
     if HEADS<2:
         fh.seek(track*SECTRK*512+(sector-1)*512)
