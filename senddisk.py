@@ -178,7 +178,7 @@ if __name__ == '__main__':  # noqa
     #Interestingly enough this practice seems to be documented almost nowhere.
 
     if HEADS<2:
-        fh.seek(track*9*512+(sector-1)*512)
+        fh.seek(track*SECTRK*512+(sector-1)*512)
     else:
         seekvalue=track*2*SECLEN*SECTRK
         if head==1:
