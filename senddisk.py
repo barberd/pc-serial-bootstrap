@@ -20,8 +20,12 @@ import struct
 import time
 import os
 
+#Modify these for the disk image you're sending.
+#For example, a 160k image will be 40 tracks, 8 sectors per track, 1 head (side).
+#and a 360k image image be 40, 9, 2.
 TRACKS=40
 SECTRK=9
+HEADS=2
 SECLEN=512
 
 bytedelay=.05
@@ -162,11 +166,24 @@ if __name__ == '__main__':  # noqa
     #these variables. This program will autoseek to the correct location in
     #the image file.
 
+    head=0
     track=0
     sector=1
-    head=0
 
-    fh.seek(head*512*9*40+track*9*512+(sector-1)*512)
+
+    #Crazy seek math below for 2 sided disks is because a disk image is actually
+    #interleaved on both sides of the disk. So bytes 0-511 are written on
+    #head 0, track 0...but bytes 512-1023 are written on head 1, track 0.
+    #then head 0, track 1, then head 1, track 1, and so on.
+    #Interestingly enough this practice seems to be documented almost nowhere.
+
+    if HEADS<2:
+        fh.seek(track*9*512+(sector-1)*512)
+    else:
+        seekvalue=track*2*SECLEN*SECTRK
+        if head==1:
+            seekvalue=seekvalue+(SECLEN*SECTRK)
+        fh.seek(seekvalue)
     while True:
         buf=fh.read(512)
         if len(buf)==0:
@@ -208,10 +225,14 @@ if __name__ == '__main__':  # noqa
         time.sleep(3)
         sector+=1
         if sector>SECTRK:
-            track+=1
             sector=1
-        if track>=TRACKS:
-            head+=1
-            track=0
+            if HEADS<2:
+                track+=1
+            else:
+                if head==0:
+                    head=1
+                else:
+                    track+=1
+                    head=0
     print("Exiting.")
     fh.close()
